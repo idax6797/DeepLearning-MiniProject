@@ -15,6 +15,7 @@ pip install "numpy>=1.23.0,<2.0"
 # Install PyTorch with CUDA support (for GPU acceleration on UCloud)
 echo "📦 Installing PyTorch with CUDA 11.8 support..."
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install torch
 
 # Install data processing and visualization (after NumPy)
 echo "📦 Installing data processing packages..."
@@ -22,12 +23,15 @@ pip install "pandas>=1.5.0,<2.0"
 pip install "matplotlib>=3.5.0"
 pip install seaborn
 pip install Pillow
+pip install opencv-python
+
 # OpenCV is optional - only install if needed for your specific use case
 # pip install opencv-python-headless
 
 # Install ML/DL utilities
 echo "📦 Installing scikit-learn..."
-pip install "scikit-learn>=1.1.0"
+pip install scikit-learn
+pip install seaborn
 
 # Install progress bar
 echo "📦 Installing tqdm..."
