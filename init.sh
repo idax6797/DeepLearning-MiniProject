@@ -1,41 +1,39 @@
 #!/bin/bash
 
-# UCloud Setup Script for U-Net Tumor Segmentation
-echo "🚀 Setting up environment for U-Net Training..."
+echo "🧹 CLEAN INSTALLATION - Removing all packages first..."
 echo "============================================================"
+
+# Uninstall all relevant packages
+echo "📦 Uninstalling existing packages..."
+pip uninstall -y torch torchvision torchaudio numpy pandas scikit-learn scipy matplotlib seaborn Pillow opencv-python tqdm jupyter ipykernel
+
+# Clear pip cache
+echo "🗑️  Clearing pip cache..."
+pip cache purge
 
 # Update pip
 echo "📦 Upgrading pip..."
 pip install --upgrade pip
 
-# CRITICAL: Install NumPy first to avoid compatibility issues
-echo "📦 Installing NumPy (compatible version)..."
-pip install "numpy>=1.23.0,<2.0"
+echo ""
+echo "✅ Clean slate ready! Now installing fresh packages..."
+echo "============================================================"
 
-# Install PyTorch with CUDA support (for GPU acceleration on UCloud)
+# Install PyTorch FIRST
 echo "📦 Installing PyTorch with CUDA 11.8 support..."
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-pip install torch
 
-# Install data processing and visualization (after NumPy)
-echo "📦 Installing data processing packages..."
-pip install "pandas>=1.5.0,<2.0"
-pip install "matplotlib>=3.5.0"
-pip install seaborn
-pip install Pillow
-pip install opencv-python
+# Install NumPy
+echo "📦 Installing NumPy (latest compatible)..."
+pip install "numpy>=1.24.0,<2.0" --no-cache-dir
 
-# OpenCV is optional - only install if needed for your specific use case
-# pip install opencv-python-headless
+# Install scientific packages (compile against current NumPy)
+echo "📦 Installing scientific packages..."
+pip install --no-binary pandas,scikit-learn pandas scikit-learn scipy --no-cache-dir
 
-# Install ML/DL utilities
-echo "📦 Installing scikit-learn..."
-pip install scikit-learn
-pip install seaborn
-
-# Install progress bar
-echo "📦 Installing tqdm..."
-pip install tqdm
+# Install visualization & utilities
+echo "📦 Installing visualization packages..."
+pip install matplotlib seaborn Pillow opencv-python tqdm
 
 # Install Jupyter
 echo "📦 Installing Jupyter..."
@@ -43,31 +41,29 @@ pip install jupyter ipykernel
 
 # Verify installations
 echo ""
+echo "============================================================"
 echo "✅ Verifying installations..."
-python3 << EOF
+echo "============================================================"
+python3 << 'EOF'
 import torch
 import numpy as np
-import matplotlib
-import tqdm
+import pandas as pd
 import sklearn
+import matplotlib
 
-print(f"✓ PyTorch version: {torch.__version__}")
+print(f"✓ PyTorch: {torch.__version__}")
+print(f"✓ NumPy: {np.__version__}")
+print(f"✓ pandas: {pd.__version__}")
+print(f"✓ scikit-learn: {sklearn.__version__}")
 print(f"✓ CUDA available: {torch.cuda.is_available()}")
 if torch.cuda.is_available():
-    print(f"✓ CUDA version: {torch.version.cuda}")
-    print(f"✓ GPU devices: {torch.cuda.device_count()}")
-    print(f"✓ Current GPU: {torch.cuda.get_device_name(0)}")
-print(f"✓ NumPy version: {np.__version__}")
-print(f"✓ Matplotlib version: {matplotlib.__version__}")
-print(f"✓ scikit-learn version: {sklearn.__version__}")
+    print(f"✓ GPU: {torch.cuda.get_device_name(0)}")
+
+print("\n🧪 Testing imports...")
+from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve
+import seaborn as sns
+print("✓ All imports successful!")
 EOF
 
 echo ""
-echo "🎉 Setup complete! Ready to run U-Net training."
-echo "📊 Your data structure should be:"
-echo "   augmented_data/"
-echo "   ├── patients/"
-echo "   │   ├── imgs/"
-echo "   │   └── labels/"
-echo "   └── controls/"
-echo "       └── imgs/"
+echo "🎉 Setup complete!"
